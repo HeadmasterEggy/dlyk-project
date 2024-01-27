@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -107,6 +108,7 @@ public class TUser implements UserDetails, Serializable {
 
     //---------------------------实现UserDetails接口-------------------------------------
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> list = new ArrayList<>();
@@ -124,6 +126,7 @@ public class TUser implements UserDetails, Serializable {
         return list;
     }
 
+    @JsonIgnore
     @Override
     public String getPassword() {
         return this.getLoginPwd();
@@ -134,21 +137,25 @@ public class TUser implements UserDetails, Serializable {
         return this.getLoginAct();
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return this.getAccountNoExpired() == 1;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return this.getAccountNoLocked() == 1;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return this.getCredentialsNoExpired() == 1;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return this.getAccountEnabled() == 1;
