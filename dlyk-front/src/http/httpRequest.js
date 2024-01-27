@@ -1,9 +1,9 @@
 import axios from "axios";
 //定义后端接口地址的前缀
-axios.defaults.baseURL="http://localhost:8080"
+axios.defaults.baseURL="http://localhost:8089"
 export function doGet(url, params) {
     axios({
-        method: 'GET',
+        method: "GET",
         url: url,
         params: params,
         dataType: "json"
@@ -18,7 +18,7 @@ export function doGet(url, params) {
 
 export function doPost(url, data) {
     return axios({
-        method: 'POST',
+        method: "POST",
         url: url,
         data: data,
         dataType: "json"
@@ -27,7 +27,7 @@ export function doPost(url, data) {
 
 export function doPut(url, data) {
     axios({
-        method: 'PUT',
+        method: "PUT",
         url: url,
         data: data,
         dataType: "json"
@@ -42,7 +42,7 @@ export function doPut(url, data) {
 
 export function doDelete(url, params) {
     axios({
-        method: 'DELETE',
+        method: "DELETE",
         url: url,
         params: params,
         dataType: "json"
