@@ -27,7 +27,7 @@
 
 
         <el-form-item>
-          <el-checkbox label="记住我" name="rememberMe"/>
+          <el-checkbox label="记住我" v-model="user.rememberMe"/>
         </el-form-item>
 
       </el-form>
@@ -77,10 +77,17 @@ export default {
           let formData = new FormData();
           formData.append("loginAct", this.user.loginAct);
           formData.append("loginPwd", this.user.loginPwd);
+          formData.append("rememberMe", this.user.rememberMe);
           doPost("/api/login", formData).then((resp) => {
             console.log(resp);
             if (resp.data.code === 200) {
               messageTip("登录成功", 'success');
+              //前端存储jwt
+              if (this.user.rememberMe === true) {
+                window.localStorage.setItem("dlyk token", resp.data.data);
+              } else {
+                window.sessionStorage.setItem("dlyk token", resp.data.data);
+              }
               //跳转体统主界面
               window.location.href = "/dashboard";
             } else {
