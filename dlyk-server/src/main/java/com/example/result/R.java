@@ -38,6 +38,13 @@ public class R {
 
     }
 
+    public static R OK() {
+        return R.builder()
+                .code(CodeEnum.OK.getCode())
+                .msg(CodeEnum.OK.getMsg())
+                .build();
+    }
+
     public static R FAIL() {
         return R.builder()
                 .code(CodeEnum.FAIL.getCode())
@@ -49,6 +56,13 @@ public class R {
         return R.builder()
                 .code(CodeEnum.FAIL.getCode())
                 .msg(msg)
+                .build();
+    }
+
+    public static R FAIL(CodeEnum codeEnum) {
+        return R.builder()
+                .code(codeEnum.getCode())
+                .msg(codeEnum.getMsg())
                 .build();
     }
 }

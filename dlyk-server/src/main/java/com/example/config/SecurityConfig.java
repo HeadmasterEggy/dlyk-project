@@ -1,5 +1,6 @@
 package com.example.config;
 
+import com.example.config.filter.TokenVerifyFilter;
 import com.example.config.handler.MyAuthenticationFailureHandler;
 import com.example.config.handler.MyAuthenticationSuccessHandler;
 import jakarta.annotation.Resource;
@@ -7,14 +8,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -24,6 +26,9 @@ public class SecurityConfig {
     private MyAuthenticationSuccessHandler myAuthenticationSuccessHandler;
     @Resource
     private MyAuthenticationFailureHandler myAuthenticationFailureHandler;
+
+    @Resource
+    private TokenVerifyFilter tokenVerifyFilter;
 
     @Bean   //There is no PasswordEncoder mapped for the id "null"
     public PasswordEncoder passwordEncoder() {
@@ -52,6 +57,12 @@ public class SecurityConfig {
                     cors.configurationSource(configurationSource);
                 })
 
+                .sessionManagement((session) -> {
+                    //session创建策略
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                })
+
+                .addFilterBefore(tokenVerifyFilter, LogoutFilter.class)
                 .build();
     }
 

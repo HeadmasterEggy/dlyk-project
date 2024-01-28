@@ -37,9 +37,9 @@
 </template>
 
 <script>
-import {doPost} from "../http/httpRequest.js";
+import {doGet, doPost} from "../http/httpRequest.js";
 import {ElMessage} from "element-plus";
-import {messageTip} from "../util/utils.js";
+import {getTokenName, messageTip, removeToken} from "../util/utils.js";
 
 export default {
   name: "LoginView",
@@ -82,11 +82,15 @@ export default {
             console.log(resp);
             if (resp.data.code === 200) {
               messageTip("登录成功", 'success');
+
+              //删除历史存储的token
+              removeToken();
+
               //前端存储jwt
               if (this.user.rememberMe === true) {
-                window.localStorage.setItem("dlyk token", resp.data.data);
+                window.localStorage.setItem(getTokenName(), resp.data.data);
               } else {
-                window.sessionStorage.setItem("dlyk token", resp.data.data);
+                window.sessionStorage.setItem(getTokenName(), resp.data.data);
               }
               //跳转体统主界面
               window.location.href = "/dashboard";
@@ -96,6 +100,17 @@ export default {
           });
         }
       })
+    },
+
+    freeLogin() {
+      let token = window.localStorage.getItem(getTokenName());
+      if (token) {
+        doGet("/api/login/free", {}).then(resp => {
+          if (resp.data.code === 200) {
+            window.location.href = "/dashboard";
+          }
+        })
+      }
     }
   }
 }

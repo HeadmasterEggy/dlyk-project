@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.model.TUser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -81,5 +82,24 @@ public class JWTUtils {
         }
     }
 
+    public static TUser parseUserFromJWT(String jwt) {
+        try {
+            // 使用秘钥创建一个验证器对象
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(SECRET)).build();
+
+            //验证JWT，得到一个解码后的jwt对象
+            DecodedJWT decodedJWT = jwtVerifier.verify(jwt);
+
+            //通过解码后的jwt对象，就可以获取里面的负载数据
+            Claim userClaim = decodedJWT.getClaim("user");
+
+            String userJSON = userClaim.asString();
+
+            return JSONUtils.toBean(userJSON, TUser.class);
+        } catch (TokenExpiredException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 
 }
