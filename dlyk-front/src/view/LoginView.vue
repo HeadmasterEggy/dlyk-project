@@ -38,6 +38,8 @@
 
 <script>
 import {doPost} from "../http/httpRequest.js";
+import {ElMessage} from "element-plus";
+import {messageTip} from "../util/utils.js";
 
 export default {
   name: "LoginView",
@@ -77,6 +79,13 @@ export default {
           formData.append("loginPwd", this.user.loginPwd);
           doPost("/api/login", formData).then((resp) => {
             console.log(resp);
+            if (resp.data.code === 200) {
+              messageTip("登录成功", 'success');
+              //跳转体统主界面
+              window.location.href = "/dashboard";
+            } else {
+              messageTip("账号或密码错误", 'error');
+            }
           });
         }
       })
