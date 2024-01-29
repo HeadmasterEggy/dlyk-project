@@ -1,8 +1,10 @@
 package com.example.config.handler;
 
+import com.example.constant.Constants;
 import com.example.model.TUser;
 import com.example.result.CodeEnum;
 import com.example.result.R;
+import com.example.service.RedisService;
 import com.example.utils.JSONUtils;
 import com.example.utils.ResponseUtils;
 import jakarta.annotation.Resource;
@@ -18,15 +20,19 @@ import java.io.IOException;
 @Component
 public class MyLogoutSuccessHandler implements LogoutSuccessHandler {
 
+    @Resource
+    private RedisService redisService;
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         //用户退出登录，那么把redis中的jwt删除
         TUser tUser = (TUser) authentication.getPrincipal();
 
+        //删除redis中用户的jwt
+        redisService.removeValue(Constants.REDIS_JWT_KEY + tUser.getId());
 
         //执行到这里，说明退出成功，那我们向前端返回json就行了
-        R result = R.OK(CodeEnum.OK);
+        R result = R.OK(CodeEnum.USER_LOGOUT);
 
         //把R对象转成json
         String resultJSON = JSONUtils.toJSON(result);

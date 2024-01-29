@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.ObjectUtils;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,6 +20,7 @@ import java.util.List;
  */
 @Data
 public class TUser implements UserDetails, Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     /**
      * 主键，自动增长，用户ID

@@ -45,6 +45,13 @@ public class R {
                 .build();
     }
 
+    public static R OK(CodeEnum codeEnum) {
+        return R.builder()
+                .code(CodeEnum.OK.getCode())
+                .msg(codeEnum.getMsg())
+                .build();
+    }
+
     public static R FAIL() {
         return R.builder()
                 .code(CodeEnum.FAIL.getCode())

@@ -128,14 +128,14 @@
 
         <el-dropdown trigger="click">
         <span class="el-dropdown-link">
-          管理员
+          {{ user.name }}
           <el-icon class="el-icon--right"><arrow-down/></el-icon>
         </span>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item>我的资料</el-dropdown-item>
               <el-dropdown-item>修改密码</el-dropdown-item>
-              <el-dropdown-item divided>退出登录</el-dropdown-item>
+              <el-dropdown-item divided @click="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -161,25 +161,49 @@ import {
 } from "@element-plus/icons-vue";
 import {defineComponent} from "vue";
 import {doGet} from "../http/httpRequest.js";
+import {messageConfirm, messageTip, removeToken} from "../util/utils.js";
 
 export default defineComponent({
   name: "DashboardView",
 
   data() {
     return {
-      isCollapse: false
+      isCollapse: false,
+
+      //登录用户对象
+      user: {}
     }
   },
+
   mounted() {
     this.loadLoginUser();
   },
+
   methods: {
     showMenu() {
       this.isCollapse = !this.isCollapse;
     },
+
     loadLoginUser() {
       doGet("/api/login/info", {}).then((resp) => {
         console.log(resp)
+        this.user = resp.data.data;
+      })
+    },
+
+    logout() {
+      doGet("/api/logout", {}).then(resp => {
+        if (resp.data.code === 200) {
+          removeToken();
+          messageTip("退出成功", "success");
+        } else {
+          messageConfirm("退出异常，是否强制退出").then(() => {
+            removeToken();
+            window.location.href = "/";
+          }).catch(() => {
+            messageTip("取消强制退出", "warning");
+          })
+        }
       })
     }
 

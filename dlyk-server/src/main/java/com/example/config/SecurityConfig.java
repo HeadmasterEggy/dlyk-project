@@ -3,6 +3,7 @@ package com.example.config;
 import com.example.config.filter.TokenVerifyFilter;
 import com.example.config.handler.MyAuthenticationFailureHandler;
 import com.example.config.handler.MyAuthenticationSuccessHandler;
+import com.example.config.handler.MyLogoutSuccessHandler;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,9 @@ public class SecurityConfig {
     private MyAuthenticationSuccessHandler myAuthenticationSuccessHandler;
     @Resource
     private MyAuthenticationFailureHandler myAuthenticationFailureHandler;
+
+    @Resource
+    private MyLogoutSuccessHandler myLogoutSuccessHandler;
 
     @Resource
     private TokenVerifyFilter tokenVerifyFilter;
@@ -63,6 +67,12 @@ public class SecurityConfig {
                 })
 
                 .addFilterBefore(tokenVerifyFilter, LogoutFilter.class)
+
+                .logout((logout) -> {
+                    logout.logoutUrl("/api/logout")
+                            .logoutSuccessHandler(myLogoutSuccessHandler);
+                })
+
                 .build();
     }
 

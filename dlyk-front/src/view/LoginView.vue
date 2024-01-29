@@ -40,8 +40,9 @@
 import {doGet, doPost} from "../http/httpRequest.js";
 import {ElMessage} from "element-plus";
 import {getTokenName, messageTip, removeToken} from "../util/utils.js";
+import {defineComponent} from "vue";
 
-export default {
+export default defineComponent({
   name: "LoginView",
   data() {
     return {
@@ -63,9 +64,14 @@ export default {
         loginPwd: [
           {required: true, message: '请输入登录密码', trigger: 'blur'},
           {min: 6, max: 16, message: '登录密码长度为6-16位', trigger: 'blur'}
-        ]
+        ],
+        rememberMe: []
       }
     }
+  },
+
+  mounted() {
+    this.freeLogin();
   },
 
   methods: {
@@ -78,8 +84,10 @@ export default {
           formData.append("loginAct", this.user.loginAct);
           formData.append("loginPwd", this.user.loginPwd);
           formData.append("rememberMe", this.user.rememberMe);
+
           doPost("/api/login", formData).then((resp) => {
             console.log(resp);
+
             if (resp.data.code === 200) {
               messageTip("登录成功", 'success');
 
@@ -92,6 +100,7 @@ export default {
               } else {
                 window.sessionStorage.setItem(getTokenName(), resp.data.data);
               }
+
               //跳转体统主界面
               window.location.href = "/dashboard";
             } else {
@@ -102,6 +111,7 @@ export default {
       })
     },
 
+    //免登录
     freeLogin() {
       let token = window.localStorage.getItem(getTokenName());
       if (token) {
@@ -113,7 +123,7 @@ export default {
       }
     }
   }
-}
+})
 </script>
 
 

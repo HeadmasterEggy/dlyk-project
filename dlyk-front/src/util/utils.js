@@ -1,4 +1,4 @@
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 /**
  * 消息提示
@@ -13,6 +13,24 @@ export function messageTip(msg, type) {
         center: true,
         duration: 1000
     })
+}
+
+/**
+ * 消息确认提示
+ *
+ * @param msg
+ * @returns {Promise<MessageBoxData>}
+ */
+export function messageConfirm(msg) {
+    return ElMessageBox.confirm(
+        msg, //提示语
+        '系统提醒', //提示的标题
+        {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    )
 }
 
 /**

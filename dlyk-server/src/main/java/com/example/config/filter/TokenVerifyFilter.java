@@ -8,6 +8,7 @@ import com.example.service.RedisService;
 import com.example.utils.JSONUtils;
 import com.example.utils.JWTUtils;
 import com.example.utils.ResponseUtils;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Resource;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -29,7 +30,7 @@ public class TokenVerifyFilter extends OncePerRequestFilter {
     private RedisService redisService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain) throws ServletException, IOException {
         String requestURI = request.getRequestURI();
         if (requestURI.equals(Constants.LOGIN_URI)) {
             //登录的时候还没有生成jwt，此时不需要验证jwt，直接放行即可，可以让filter链继续执行，执行下一个filter
