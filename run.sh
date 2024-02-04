@@ -3,7 +3,8 @@
 # 读取当前版本号
 current_version=$(cat version.txt)
 
-# 将版本号加一
+# 将版本号加0.1
+# shellcheck disable=SC2079
 new_version=$((current_version + 0.1))
 
 # 将新版本号写入 version.txt 文件
