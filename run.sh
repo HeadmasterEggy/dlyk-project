@@ -13,3 +13,4 @@ echo $new_version > version.txt
 # 执行 git add 和 git commit 命令
 git add .
 git commit -m "Update to version $new_version"
+git push
