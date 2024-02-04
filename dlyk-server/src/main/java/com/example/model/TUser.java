@@ -1,6 +1,7 @@
 package com.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,6 +20,7 @@ import java.util.List;
  * t_user
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TUser implements UserDetails, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -101,16 +103,12 @@ public class TUser implements UserDetails, Serializable {
 
         //角色
         if (!ObjectUtils.isEmpty(this.getRoleList())) {
-            this.getRoleList().forEach(role -> {
-                list.add(new SimpleGrantedAuthority(role));
-            });
+            this.getRoleList().forEach(role -> list.add(new SimpleGrantedAuthority(role)));
         }
 
         if (!ObjectUtils.isEmpty(this.getPermissionList())) {
             //权限标识符
-            this.getPermissionList().forEach(permission -> {
-                list.add(new SimpleGrantedAuthority(permission));
-            });
+            this.getPermissionList().forEach(permission -> list.add(new SimpleGrantedAuthority(permission)));
         }
         return list;
     }

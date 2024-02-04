@@ -196,6 +196,7 @@ export default defineComponent({
         if (resp.data.code === 200) {
           removeToken();
           messageTip("退出成功", "success");
+          window.location.href = "/";
         } else {
           messageConfirm("退出异常，是否强制退出").then(() => {
             removeToken();

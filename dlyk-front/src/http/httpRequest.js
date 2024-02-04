@@ -61,6 +61,7 @@ axios.interceptors.request.use((config) => {
             config.headers['rememberMe'] = true;
         }
     }
+
     if (token) {
         config.headers['Authorization'] = token;
     }
