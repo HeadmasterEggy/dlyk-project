@@ -2,7 +2,7 @@
 
 # 读取当前版本号
 current_version=$(cat version.txt)
-echo current_version
+echo "$current_version"
 
 # 将版本号加1
 # shellcheck disable=SC2079
