@@ -8,9 +8,13 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.concurrent.Executor;
 
 @MapperScan(basePackages = {"com.example.mapper"})
 @SpringBootApplication
@@ -19,8 +23,18 @@ public class DlykServerApplication implements CommandLineRunner {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
+
+
     public static void main(String[] args) {
-        SpringApplication.run(DlykServerApplication.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(DlykServerApplication.class, args);
+
+        String[] beanNamesForType = context.getBeanNamesForType(Executor.class);
+        for (String s : beanNamesForType) {
+            System.out.println(s);
+        }
+
+        Object obj = context.getBean("applicationTaskExecutor");
+        System.out.println(obj);
     }
 
     @Override

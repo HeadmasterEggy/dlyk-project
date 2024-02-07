@@ -14,6 +14,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,9 @@ public class TokenVerifyFilter extends OncePerRequestFilter {
 
     @Resource
     private RedisService redisService;
+
+    @Resource
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain) throws ServletException, IOException {
@@ -94,19 +98,20 @@ public class TokenVerifyFilter extends OncePerRequestFilter {
             }
 
 //            //给token续期
-//            String rememberMe = request.getHeader(Constants.REMEMBERME_NAME); //true, null
-//            if (Boolean.parseBoolean(rememberMe)) {
-//                //续期7天
-//                redisService.expire(Constants.REDIS_JWT_KEY + userId, Constants.EXPIRE_TIME, TimeUnit.MINUTES);
-//            } else {
-//                //续期30分钟
-//                redisService.expire(Constants.REDIS_JWT_KEY + userId, Constants.DEFAULT_EXPIRE_TIME, TimeUnit.MINUTES);
-//            }
+            String rememberMe = request.getHeader(Constants.REMEMBERME_NAME); //true, null
+            if (Boolean.parseBoolean(rememberMe)) {
+                //续期7天
+                redisService.expire(Constants.REDIS_JWT_KEY + userId, Constants.EXPIRE_TIME, TimeUnit.MINUTES);
+            } else {
+                //续期30分钟
+                redisService.expire(Constants.REDIS_JWT_KEY + userId, Constants.DEFAULT_EXPIRE_TIME, TimeUnit.MINUTES);
+            }
 
             //都验证通过了，没有问题了，需要告诉spring security框架，这样spring security框架才知道该jwt是已经登录过的
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(tUser, tUser.getLoginPwd(), tUser.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
+/*
             //刷新token 异步处理
             new Thread(() -> {
                 //刷新token
@@ -117,9 +122,16 @@ public class TokenVerifyFilter extends OncePerRequestFilter {
                     redisService.expire(Constants.REDIS_JWT_KEY + tUser.getId(), Constants.DEFAULT_EXPIRE_TIME, TimeUnit.SECONDS);
                 }
             }).start();
+*/
 
-            //异步处理 线程池
-
+            //异步处理 线程池 刷新token
+            threadPoolTaskExecutor.execute(() -> {
+                if (Boolean.parseBoolean(rememberMe)) {
+                    redisService.expire(Constants.REDIS_JWT_KEY + tUser.getId(), Constants.EXPIRE_TIME, TimeUnit.SECONDS);
+                } else {
+                    redisService.expire(Constants.REDIS_JWT_KEY + tUser.getId(), Constants.DEFAULT_EXPIRE_TIME, TimeUnit.SECONDS);
+                }
+            });
 
             //下面就是filter链继续执行，执行下一个filter
             filterChain.doFilter(request, response);

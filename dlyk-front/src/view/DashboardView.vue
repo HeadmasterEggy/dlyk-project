@@ -10,7 +10,8 @@
           :unique-opened="true"
           class="el-menu-vertical-demo"
           default-active="2"
-          style="border-right: solid 0px;"
+          style="border-right: solid 0;"
+          :router="true"
       >
         <el-sub-menu index="1">
 
@@ -98,8 +99,7 @@
             </el-icon>
             <span>用户管理</span>
           </template>
-          <el-menu-item index="1-1">用户管理</el-menu-item>
-          <el-menu-item index="1-2">用户统计</el-menu-item>
+          <el-menu-item index="/dashboard/user">用户管理</el-menu-item>
 
         </el-sub-menu>
 
@@ -141,7 +141,9 @@
         </el-dropdown>
 
       </el-header>
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view/>
+      </el-main>
       <el-footer>Footer</el-footer>
     </el-container>
   </el-container>
