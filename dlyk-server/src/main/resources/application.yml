@@ -16,6 +16,10 @@ spring:
       idle-timeout: 0
       max-lifetime: 18000000
 
+  # 设置时间格式
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
   data:
     redis:
       host: 127.0.0.1

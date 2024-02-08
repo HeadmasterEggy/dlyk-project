@@ -14,6 +14,11 @@ const router = createRouter({
                 {
                     path: 'user',
                     component: () => import('../view/UserView.vue')
+                },
+                {
+                    //id是动态变量
+                    path: 'user/:id',
+                    component: () => import('../view/UserDetailView.vue'),
                 }
             ]
         }
