@@ -20,4 +20,6 @@ public interface TUserMapper {
     TUser selectByLoginAct(String username);
 
     List<TUser> selectUserByPage();
+
+    TUser selectDetailById(Integer id);
 }

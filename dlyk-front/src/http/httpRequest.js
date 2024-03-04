@@ -22,32 +22,20 @@ export function doPost(url, data) {
 }
 
 export function doPut(url, data) {
-    axios({
-        method: "PUT",
+    return axios({
+        method: "put",
         url: url,
         data: data,
         dataType: "json"
-    }).then(function (rep) {
-        let s = "";
-        rep.data.forEach(function (stu) {
-            s += stu.name + "---------------" + stu.age + "<br>";
-        });
-        document.getElementById("mydiv").innerHTML = s;
     })
 }
 
 export function doDelete(url, params) {
-    axios({
-        method: "DELETE",
+    return axios({
+        method: "delete",
         url: url,
-        params: params,
+        params: params, //{name: "对的", age: 22},
         dataType: "json"
-    }).then(function (rep) {
-        let s = "";
-        rep.data.forEach(function (stu) {
-            s += stu.name + "---------------" + stu.age + "<br>";
-        });
-        document.getElementById("mydiv").innerHTML = s;
     })
 }
 
