@@ -39,6 +39,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TUser getUserById(Integer id) {
-        return tUserMapper.selectByPrimaryKey(id);
+        return tUserMapper.selectDetailById(id);
     }
 }

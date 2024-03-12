@@ -92,6 +92,11 @@ public class TUser implements UserDetails, Serializable {
      * 权限标识符List
      */
     private List<String> permissionList;
+    /**
+     * 一对一关联
+     */
+    private TUser createByDO;
+    private TUser editByDO;
 
 
     //---------------------------实现UserDetails接口-------------------------------------
