@@ -2,10 +2,13 @@ package com.example.service.impl;
 
 import com.example.mapper.TUserMapper;
 import com.example.model.TUser;
+import com.example.query.UserQuery;
 import com.example.service.UserService;
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -40,5 +43,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public TUser getUserById(Integer id) {
         return tUserMapper.selectDetailById(id);
+    }
+
+    @Override
+    public int saveUser(UserQuery userQuery) {
+
+        TUser tUser = new TUser();
+
+        //把UserQuery对象里面的属性复制到TUser对象里面
+        BeanUtils.copyProperties(userQuery, tUser);
+
+        return tUserMapper.insertSelective(tUser);
     }
 }

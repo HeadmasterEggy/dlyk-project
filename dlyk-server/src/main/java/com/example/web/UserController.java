@@ -1,16 +1,15 @@
 package com.example.web;
 
 import com.example.model.TUser;
+import com.example.query.UserQuery;
 import com.example.result.R;
 import com.example.service.UserService;
 import com.github.pagehelper.PageInfo;
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -54,5 +53,11 @@ public class UserController {
     public R userDetail(@PathVariable(value = "id") Integer id){
         TUser tuser = userService.getUserById(id);
         return R.OK(tuser);
+    }
+
+    @PostMapping(value = "/api/user")
+    public R addUser(UserQuery userQuery){
+        int save = userService.saveUser(userQuery);
+        return save >= 1 ? R.OK() : R.FAIL();
     }
 }
